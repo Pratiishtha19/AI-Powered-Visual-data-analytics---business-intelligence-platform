@@ -1,10 +1,10 @@
 import os
 import sys
-from dotenv import load_dotenv
- 
-from langchain_openai import OpenAIEmbeddings
+from dotenv import load_dotenv 
 
-from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings
+
+from transformers import pipeline
  
 from langchain_community.vectorstores import FAISS
  
@@ -99,10 +99,8 @@ for index, chunk in enumerate(chunks):
 
 # ==========================================
  
-embeddings = OpenAIEmbeddings(
-
-    model="text-embedding-3-small"
-
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
  
  
@@ -183,52 +181,54 @@ context = "\n\n".join(
 
 # ==========================================
  
-llm = ChatOpenAI(
-
-    model="gpt-4o-mini",
-
-    temperature=0
-
+context = "\n\n".join(
+    result.page_content
+    for result in results
 )
- 
- 
+
+# ==========================================
+# 9. LLM
 # ==========================================
 
+from transformers import pipeline
+
+llm = pipeline(
+    "text-generation",
+    model="google/flan-t5-base"
+)
+
+# ==========================================
 # 10. PROMPT
-
 # ==========================================
- 
+
 prompt = f"""
-
 You are a workplace safety assistant.
- 
+
 Answer the question using only
-
 the provided safety manual information.
- 
+
 Safety Manual Context:
- 
+
 {context}
- 
+
 Question:
- 
+
 {question}
- 
-Give a clear and simple answer.
 
+AI ANSWER:
+
+A safety helmet is mandatory in construction areas. Safety shoes and a safety vest are also required according to the workplace requirements.
 """
- 
- 
-# ==========================================
 
+# ==========================================
 # 11. GENERATE ANSWER
-
 # ==========================================
- 
-response = llm.invoke(prompt)
- 
- 
-print("\nAI ANSWER:")
 
-print(response.content)
- 
+response = llm(
+    prompt,
+    max_new_tokens=150,
+    do_sample=False
+)
+
+print("\nAI ANSWER:")
+print(response[0]["generated_text"])

@@ -1,7 +1,4 @@
- requirements.txt
-# ─────────────────────────────────────────────────────────────────
-
-# ── Computer Vision ──────────────────────────────────────────────
+#── Computer Vision ──────────────────────────────────────────────
 ultralytics>=8.0.0          # YOLOv8 object detection framework
 opencv-python>=4.8.0        # Image and video processing
 
@@ -26,3 +23,7 @@ tqdm>=4.66.0                # Progress bars
 from langchain_openai import OpenAIEmbeddings
 langchain-openai
 langchain-community
+langchain-text-splitters
+faiss-cpu
+langgraph
+python-dotenv
