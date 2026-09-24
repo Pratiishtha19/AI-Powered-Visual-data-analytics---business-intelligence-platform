@@ -1,52 +1,175 @@
-# 🤖 AI-Powered Visual Data Analytics and Business Intelligence
-
-An AI-powered visual analytics system that combines **computer vision, PPE detection, document processing, vector databases, and Retrieval-Augmented Generation (RAG)** to build an intelligent safety knowledge and monitoring pipeline.
-
-The project is designed as a practice implementation for **Milestone 3**, integrating the knowledge gained from document processing, embeddings, vector search, LLM-based question answering, and YOLO-based computer vision.
-
----
+# AI-Powered Visual Data Analytics and Business Intelligence
 
 ## 📌 Project Overview
 
-The system combines two major capabilities:
+This project is developed as part of **Infosys Springboard Internship – Milestone 3**.
 
-### 📄 1. Document Intelligence & RAG
+The project combines **AI-based image analysis** with a **Retrieval-Augmented Generation (RAG)** based safety assistant. It processes a workplace safety manual, converts the information into searchable vector representations, retrieves relevant information based on the user's question, and generates a simple answer using a local Hugging Face language model.
 
-A safety manual PDF is processed through a complete document-processing pipeline:
+The project demonstrates the integration of:
 
-**PDF → Text Extraction → Cleaning → Chunking → Embeddings → ChromaDB → Semantic Search → LLM Answer**
-
-The system converts the safety manual into searchable knowledge chunks and stores their vector representations in **ChromaDB**.
-
-When a user asks a question, the system searches the knowledge base for relevant information and provides the retrieved context to an LLM for generating an answer.
-
-### 🦺 2. Computer Vision & PPE Detection
-
-The project also includes YOLO-based computer vision components for detecting objects and Personal Protective Equipment (PPE).
-
-The PPE detection pipeline uses a fine-tuned YOLO model (`best.pt`) to identify safety equipment such as helmets, vests, or other trained PPE classes.
+* Computer Vision
+* YOLOv8
+* Document Processing
+* Text Chunking
+* Hugging Face Embeddings
+* FAISS Vector Database
+* Retrieval-Augmented Generation (RAG)
+* FLAN-T5 Language Model
+* Streamlit
 
 ---
 
-# ✨ Key Features
+## 🎯 Objectives
 
-* 📄 PDF / DOCX / TXT document loading
-* 🧹 Text cleaning and normalization
-* ✂️ Intelligent text chunking
-* 🏷️ Document and chunk metadata extraction
-* 🧠 Embedding-based semantic search
-* 🗄️ ChromaDB vector knowledge base
-* 🔎 Retrieval-Augmented Generation (RAG) workflow
-* 🤖 YOLO object detection
-* 🦺 Fine-tuned PPE detection
-* 📷 Image-based detection
-* 🎥 Video-based detection
-* 📹 Real-time webcam monitoring
-* 🧩 Modular Python architecture
+The main objectives of this project are:
+
+1. Detect workplace safety equipment using YOLOv8.
+2. Process and extract information from a safety manual.
+3. Divide the document into smaller meaningful chunks.
+4. Convert text chunks into vector embeddings.
+5. Store embeddings in a FAISS vector database.
+6. Retrieve relevant safety information based on a user question.
+7. Generate a clear answer using the FLAN-T5 model.
+8. Build a foundation for an AI-powered workplace safety assistant.
 
 ---
 
-# 🏗️ Project Structure
+## 🏗️ Project Workflow
+
+```text
+Safety Manual PDF
+       ↓
+Text Extraction
+       ↓
+Text Cleaning / Chunking
+       ↓
+Hugging Face Embeddings
+       ↓
+FAISS Vector Database
+       ↓
+User Safety Question
+       ↓
+Similarity Search
+       ↓
+Relevant Safety Information
+       ↓
+Context + Question
+       ↓
+FLAN-T5 Model
+       ↓
+AI Generated Answer
+```
+
+---
+
+## 🧠 RAG Implementation
+
+The project uses **Retrieval-Augmented Generation (RAG)**.
+
+Instead of asking the language model to answer from general knowledge, the system first searches the workplace safety manual for relevant information.
+
+### RAG Process
+
+**1. Document Loading**
+
+The safety manual is loaded from:
+
+```text
+data/safety_manual.pdf
+```
+
+PyMuPDF is used to extract text from the PDF.
+
+**2. Text Chunking**
+
+The extracted text is divided into smaller chunks using:
+
+```text
+RecursiveCharacterTextSplitter
+```
+
+Configuration:
+
+```text
+Chunk Size: 500
+Chunk Overlap: 50
+```
+
+**3. Embeddings**
+
+The project uses the Hugging Face embedding model:
+
+```text
+sentence-transformers/all-MiniLM-L6-v2
+```
+
+The text chunks are converted into numerical vector representations.
+
+**4. Vector Database**
+
+The embeddings are stored using:
+
+```text
+FAISS
+```
+
+FAISS allows the system to perform similarity searches efficiently.
+
+**5. Retrieval**
+
+When the user asks a question, the system retrieves the top 3 relevant document chunks.
+
+**6. Generation**
+
+The retrieved information is provided as context to:
+
+```text
+google/flan-t5-base
+```
+
+The model generates a simple answer based on the retrieved safety information.
+
+---
+
+## 🤖 Computer Vision
+
+The project also contains a YOLOv8-based PPE detection component.
+
+The system can identify workplace safety equipment such as:
+
+* Safety Helmet
+* Safety Vest
+* Safety Shoes
+* Safety Gloves
+* Other trained PPE classes
+
+The trained model is stored as:
+
+```text
+best.pt
+```
+
+---
+
+## 🛠️ Technologies Used
+
+| Technology            | Purpose                   |
+| --------------------- | ------------------------- |
+| Python                | Core programming language |
+| YOLOv8                | PPE detection             |
+| Ultralytics           | YOLO implementation       |
+| Streamlit             | User interface            |
+| PyMuPDF               | PDF text extraction       |
+| LangChain             | RAG workflow              |
+| Hugging Face          | Embeddings and LLM        |
+| FAISS                 | Vector database           |
+| Sentence Transformers | Text embeddings           |
+| FLAN-T5               | Answer generation         |
+
+---
+
+## 📂 Project Structure
 
 ```text
 AI-POWERED-VISUAL-DATA-ANALYTICS-AND-BUSINESS-INTELLIGENCE/
@@ -68,212 +191,157 @@ AI-POWERED-VISUAL-DATA-ANALYTICS-AND-BUSINESS-INTELLIGENCE/
 │
 ├── best.pt
 ├── yolov8n.pt
-│
+├── milestone3_practice.py
 ├── ppe_model.py
 ├── vision.py
 ├── yolo_model.py
-│
-├── milestone3_practice.py
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# 🔄 System Architecture
+## ⚙️ Installation
 
-## 📚 RAG Knowledge Pipeline
+Clone the repository:
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_LINK
+```
+
+Open the project folder:
+
+```bash
+cd AI-POWERED-VISUAL-DATA-ANALYTICS-AND-BUSINESS-INTELLIGENCE
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate the environment on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+If required, install the main RAG dependencies manually:
+
+```bash
+pip install transformers sentencepiece torch
+pip install langchain-huggingface sentence-transformers
+pip install langchain-community langchain-text-splitters
+pip install faiss-cpu pymupdf
+```
+
+---
+
+## ▶️ Running the RAG Safety Assistant
+
+Run:
+
+```bash
+python milestone3_practice.py
+```
+
+The program will ask:
 
 ```text
-                 safety_manual.pdf
-                        │
-                        ▼
-                ┌─────────────────┐
-                │ DocumentLoader  │
-                └────────┬────────┘
-                         │
-                         ▼
-                   Raw Text
-                         │
-                         ▼
-                ┌─────────────────┐
-                │  TextCleaner    │
-                └────────┬────────┘
-                         │
-                         ▼
-                  Cleaned Text
-                         │
-                         ▼
-                ┌─────────────────┐
-                │     Chunker      │
-                └────────┬────────┘
-                         │
-                         ▼
-                  Text Chunks
-                         │
-                         ▼
-                ┌─────────────────┐
-                │   Embeddings    │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │    ChromaDB     │
-                │ Vector Database  │
-                └────────┬────────┘
-                         │
-                    User Query
-                         │
-                         ▼
-                Semantic Retrieval
-                         │
-                         ▼
-                Relevant Chunks
-                         │
-                         ▼
-                       LLM
-                         │
-                         ▼
-                  Final Answer
+Ask a safety question:
 ```
 
----
-
-# 🦺 Computer Vision Pipeline
+Example:
 
 ```text
-       Image / Video / Webcam
-                │
-                ▼
-        ┌─────────────────┐
-        │   YOLO Model    │
-        └────────┬────────┘
-                 │
-                 ▼
-        Object / PPE Detection
-                 │
-                 ▼
-       Bounding Boxes + Confidence
-                 │
-                 ▼
-          Detection Results
+What PPE is required in construction areas?
 ```
 
----
+The system will:
 
-# ⚙️ Technologies Used
+1. Search the safety manual.
+2. Retrieve relevant information.
+3. Pass the retrieved information to FLAN-T5.
+4. Generate the final answer.
 
-| Technology               | Purpose                            |
-| ------------------------ | ---------------------------------- |
-| Python                   | Core programming language          |
-| YOLOv8                   | Object and PPE detection           |
-| Ultralytics              | YOLO implementation                |
-| ChromaDB                 | Vector database                    |
-| Sentence Transformers    | Text embeddings                    |
-| PyMuPDF / PDF processing | PDF text extraction                |
-| NumPy                    | Numerical processing               |
-| OpenCV                   | Image/video processing             |
-| LLM                      | Natural-language answer generation |
-| Git & GitHub             | Version control                    |
-
----
-
-# 📁 Module Description
-
-## `src/documents/document_loader.py`
-
-Responsible for loading supported documents such as:
-
-* PDF
-* DOCX
-* TXT
-
-### Main class
+Example output:
 
 ```text
-DocumentLoader
-```
-
-### Main method
-
-```python
-.load(path)
+AI ANSWER:
+A safety helmet is mandatory in production and construction areas.
+Safety vest and safety shoes are required according to the workplace safety requirements.
 ```
 
 ---
 
-## `src/documents/text_cleaner.py`
+## 🔐 API Key Requirement
 
-Cleans and normalizes extracted document text.
-
-Typical processing includes:
-
-* Removing unnecessary whitespace
-* Normalizing text
-* Removing unwanted characters
-* Preparing text for chunking
-
-### Main class
+The RAG answer-generation component uses the local Hugging Face model:
 
 ```text
-TextCleaner
+google/flan-t5-base
 ```
 
-### Main method
+Therefore, an **OpenAI API key is not required for the LLM generation**.
 
-```python
-.clean(text)
-```
-
----
-
-## `src/documents/chunker.py`
-
-Splits large documents into smaller chunks suitable for embedding and retrieval.
-
-### Main class
+The embedding model is also downloaded from Hugging Face:
 
 ```text
-Chunker
-```
-
-### Main method
-
-```python
-.split(text)
-```
-
-Chunking makes it easier for the vector database to retrieve only the relevant parts of a document.
-
----
-
-## `src/documents/metadata.py`
-
-Extracts useful information related to documents and chunks.
-
-Examples include:
-
-* File information
-* Document source
-* Chunk information
-* Text-related metadata
-
-### Main class
-
-```text
-MetadataExtractor
-```
-
-### Main method
-
-```python
-.extract(path, text)
+sentence-transformers/all-MiniLM-L6-v2
 ```
 
 ---
 
-## `src/knowledge_base/database.py`
+## 📊 Key Features
 
-Handles the vector knowledge base using **ChromaDB**.
+### 🔹 PPE Detection
 
-It is responsible for storing document chunks and searching for relevant informatio
+Detects workplace safety equipment using YOLOv8.
+
+### 🔹 PDF Processing
+
+Extracts text from the workplace safety manual using PyMuPDF.
+
+### 🔹 Intelligent Chunking
+
+Splits large documents into smaller searchable sections.
+
+### 🔹 Semantic Search
+
+Uses embeddings and FAISS to retrieve relevant information.
+
+### 🔹 RAG-Based Question Answering
+
+Combines retrieved safety information with a language model.
+
+### 🔹 Local AI Model
+
+Uses FLAN-T5 for answer generation without requiring OpenAI credits.
+
+---
+
+## 🚀 Future Enhancements
+
+* Add a complete Streamlit interface for the RAG assistant.
+* Support multiple safety manuals.
+* Add conversation history.
+* Display document sources for every answer.
+* Improve PPE detection accuracy.
+* Add voice-based safety questions.
+* Add multilingual safety assistance.
+* Deploy the application as a web application.
+
+---
+
+## 👩‍💻 Author
+
+**Pratishtha Gadwanshi**
+
+Project: **AI-Powered Visual Data Analytics and Business Intelligence**
